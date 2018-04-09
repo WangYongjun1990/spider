@@ -1,4 +1,6 @@
 # -*- coding: utf-8 -*-
+
+import re
 import sys
 import scrapy
 from bs4 import BeautifulSoup
@@ -16,7 +18,7 @@ class CydtestSpider(scrapy.Spider):
 
     def __init__(self, name=None, **kwargs):
         super(CydtestSpider, self).__init__(name, **kwargs)
-        self.max_pn = 5
+        self.MAX_PAGE_NUMBER = 3
 
     def start_requests(self):
         """
@@ -44,8 +46,16 @@ class CydtestSpider(scrapy.Spider):
         next_page = soup.find_all('div', class_='nav-previous')
         if next_page:
             next_page_url = next_page[0].find('a').get('href')
-            request = scrapy.Request(next_page_url, callback=self.parse_list)
-            yield request
+            self.logger.info("---next_page_url---{}".format(next_page_url))
+
+            pattern = re.compile(r'paged=(\d+)')
+            page_number = re.findall(pattern, next_page_url)[0]
+
+            if int(page_number) <= self.MAX_PAGE_NUMBER:
+                request = scrapy.Request(next_page_url, callback=self.parse_list)
+                yield request
+            else:
+                self.logger.info("---over MAX_PAGE_NUMBER {}---".format(self.MAX_PAGE_NUMBER))
 
     def parse_article(self, response):
         item = SpiderCydtestItem()
