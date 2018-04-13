@@ -71,8 +71,10 @@ def request_get(url):
 
 
 if __name__ == '__main__':
-    for i in range(100):
-        res = request_get(
-            'https://www.baidu.com/')
-        if res:
-            print(res.status_code)
+    # for i in range(100):
+    #     res = request_get(
+    #         'https://www.baidu.com/')
+    #     if res:
+    #         print(res.status_code)
+    print get_aws_proxies()
+    print get_user_agent()
