@@ -18,6 +18,7 @@ class ScrapyDianpingPipeline(object):
         with open(result_file, "a") as fp:
             fp.write(item['keyword'] + '\t' +
                      item['shop_name'] + '\t' +
+                     item['star'] + '\t' +
                      item['review_num'] + '\t' +
                      item['shop_tag'] + '\t' +
                      item['avg_price'] + '\n')

@@ -23,13 +23,15 @@ class SpiderDianpingFoodSpider(scrapy.Spider):
 
     def start_requests(self):
         """
-        生成某城市评价最高的餐厅页面
+        生成南京几大商圈美食页面
         :return:
         """
         url_dict = {
             u'雨花客厅美食': r'http://www.dianping.com/search/keyword/5/0_%E9%9B%A8%E8%8A%B1%E5%AE%A2%E5%8E%85%E7%BE%8E%E9%A3%9F',
             u'虹悦城美食': r'https://www.dianping.com/search/keyword/5/0_%E8%99%B9%E6%82%A6%E5%9F%8E%E7%BE%8E%E9%A3%9F',
-            u'德基广场美食': 'https://www.dianping.com/search/keyword/5/0_%E5%BE%B7%E5%9F%BA%E5%B9%BF%E5%9C%BA%E7%BE%8E%E9%A3%9F',
+            u'德基广场美食': r'https://www.dianping.com/search/keyword/5/0_%E5%BE%B7%E5%9F%BA%E5%B9%BF%E5%9C%BA%E7%BE%8E%E9%A3%9F',
+            u'大观天地美食': r'https://www.dianping.com/search/keyword/5/0_%E5%A4%A7%E8%A7%82%E5%A4%A9%E5%9C%B0%E7%BE%8E%E9%A3%9F',
+            u'河西万达广场美食': r'https://www.dianping.com/search/keyword/5/0_%E6%B2%B3%E8%A5%BF%E4%B8%87%E8%BE%BE%E5%B9%BF%E5%9C%BA%E7%BE%8E%E9%A3%9F'
         }
 
         for keyword, url in url_dict.items():
@@ -61,6 +63,14 @@ class SpiderDianpingFoodSpider(scrapy.Spider):
                 item['shop_name'] = shop.find('h4').string
             except AttributeError:
                 item['shop_name'] = 'error'
+
+            try:
+                star_str = shop.find('div', attrs={'class': 'comment'}).find('span').get('class')[1]
+                pattern = re.compile(r'sml-str(\d+)')
+                item['star'] = re.findall(pattern, star_str)[0]
+                # print item['star']
+            except AttributeError:
+                item['star'] = '0'
 
             try:
                 item['review_num'] = shop.find('a', attrs={'class': 'review-num'}).find('b').string

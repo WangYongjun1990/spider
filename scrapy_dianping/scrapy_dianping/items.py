@@ -22,6 +22,7 @@ class ScrapyDianpingItem(scrapy.Item):
 
     keyword = scrapy.Field()
     shop_name = scrapy.Field()
+    star = scrapy.Field()
     review_num = scrapy.Field()
     avg_price = scrapy.Field()
     shop_tag = scrapy.Field()
